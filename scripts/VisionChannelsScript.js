@@ -34,15 +34,15 @@ class VisionChannelsManager {
 	//IMPLEMENTATIONS
 	static async updateVisionValues(pIgnoreNewlyVisibleTiles = false) {
 		const vTokens =
-				canvas.tokens.controlled.length > 0
-						? canvas.tokens.controlled.map(vToken => vToken.document)
-						: VisionChannelsManager.getFallbackViewerTokenDocs();
+				(canvas.tokens.controlled.length > 0)
+						? canvas.tokens.controlled.map(t => t.document)
+						: VisionChannelsManager.getEffectiveViewerTokenDocs();
 
 		vLocalVisionData.vNoControl = (vTokens.length === 0);
 
 		if (!game.user.isGM || (game.settings.get(cModuleName, "SimulateVCPlayerVision") && vTokens.length > 0)) {
 
-			let vTokens = canvas.tokens.controlled.map(vToken => vToken.document);
+			// let vTokens = canvas.tokens.controlled.map(vToken => vToken.document);
 			
 			vLocalVisionData.vReceiverChannels = VisionChannelsUtils.ReducedReceiverVCs(vTokens, true, true);	
 
@@ -85,9 +85,9 @@ class VisionChannelsManager {
 	
 	static CurrentSourcePoints() {
 		const vTokens =
-			canvas.tokens.controlled.length > 0
+			(canvas.tokens.controlled.length > 0)
 				? canvas.tokens.controlled
-				: VisionChannelsManager.getFallbackViewerTokenDocs()
+				: VisionChannelsManager.getEffectiveViewerTokens()
 					.map(doc => canvas.tokens.get(doc.id))
 					.filter(Boolean);
 
