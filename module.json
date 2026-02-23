@@ -88,5 +88,6 @@
 	}
   ],
   "url": "https://github.com/BenRaguckas/perceptive",
-  "manifest": "https://raw.githubusercontent.com/BenRaguckas/perceptive/refs/heads/main/module.json"
+  "download": "https://github.com/BenRaguckas/perceptive/releases/download/v5.0.19-fork/perceptive-fork-5.0.19-fork.zip",
+  "manifest": "https://raw.githubusercontent.com/BenRaguckas/perceptive/main/module.json"
 }
