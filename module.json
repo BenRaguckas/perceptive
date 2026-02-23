@@ -7,7 +7,7 @@
     "name": "saibot"
     }
   ],
-  "version": "5.0.19",
+  "version": "5.0.19-fork",
   "compatibility": {
     "minimum": "11",
     "verified": "13"
@@ -87,9 +87,6 @@
 	  "type": "Macro"
 	}
   ],
-  "url": "https://github.com/Saibot393/perceptive",
-  "download": "https://github.com/Saibot393/perceptive/archive/refs/tags/v5.0.19.zip",
-  "manifest": "https://github.com/Saibot393/perceptive/releases/latest/download/module.json",
-  "readme": "https://github.com/Saibot393/perceptive/blob/main/README.md",
-  "changelog": "https://github.com/Saibot393/perceptive/blob/main/CHANGELOG.md"
+  "url": "https://github.com/BenRaguckas/perceptive",
+  "manifest": "https://raw.githubusercontent.com/BenRaguckas/perceptive/refs/heads/main/module.json"
 }

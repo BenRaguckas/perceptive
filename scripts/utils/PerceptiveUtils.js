@@ -1,5 +1,5 @@
 //CONSTANTS
-const cModuleName = "perceptive"; //name of Module
+const cModuleName = "perceptive-fork"; //name of Module
 
 const cPf2eName = "pf2e";
 
