@@ -778,7 +778,17 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	config: cVCactive || game.settings.get(cModuleName, "ActivateVCs"),
 	type: Boolean,
 	default: false
-  }); 
+  });
+
+  game.settings.register(cModuleName, "VCFallbackToAssignedToken", {
+    name: game.i18n.localize("Settings.VCFallbackToAssignedToken.name"),
+    hint: game.i18n.localize("Settings.VCFallbackToAssignedToken.descrp"),
+    scope: "world",
+    config: cVCactive || game.settings.get(cModuleName, "ActivateVCs"),
+    type: Boolean,
+    default: false,
+    requiresReload: true
+  });
 
   game.settings.register(cModuleName, "VCRange3DCalc", {
 	name: Translate("Settings.VCRange3DCalc.name"),

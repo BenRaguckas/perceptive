@@ -507,7 +507,12 @@
 			"SimulateVCPlayerVision" : {
 				"name" 					: "Simulate player vision",
 				"descrp" 				: "If the Vision Channel based player vision of the currently selected token should be displayed"
-			},		
+			},
+
+			"VCFallbackToAssignedToken" : {
+				"name"					: "Default to assigned token",
+				"descrp"				: "When a player has no controlled token, evaluate Vision Channels using their assigned character token"
+			},
 			
 			"VCRange3DCalc" : {
 				"name" 					: "Vision Channel 3D range",

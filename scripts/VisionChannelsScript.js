@@ -33,9 +33,15 @@ class VisionChannelsManager {
 	
 	//IMPLEMENTATIONS
 	static async updateVisionValues(pIgnoreNewlyVisibleTiles = false) {
-		vLocalVisionData.vNoControl = canvas.tokens?.controlled?.length == 0;
-		
-		if (!game.user.isGM || (game.settings.get(cModuleName, "SimulateVCPlayerVision") && canvas.tokens.controlled.length > 0)) {
+		const vTokens =
+				canvas.tokens.controlled.length > 0
+						? canvas.tokens.controlled.map(vToken => vToken.document)
+						: VisionChannelsManager.getFallbackViewerTokenDocs();
+
+		vLocalVisionData.vNoControl = (vTokens.length === 0);
+
+		if (!game.user.isGM || (game.settings.get(cModuleName, "SimulateVCPlayerVision") && vTokens.length > 0)) {
+
 			let vTokens = canvas.tokens.controlled.map(vToken => vToken.document);
 			
 			vLocalVisionData.vReceiverChannels = VisionChannelsUtils.ReducedReceiverVCs(vTokens, true, true);	
@@ -78,7 +84,14 @@ class VisionChannelsManager {
 	}
 	
 	static CurrentSourcePoints() {
-		return canvas.tokens.controlled.map(vToken => VisionChannelsManager.VisionPoint(vToken));
+		const vTokens =
+			canvas.tokens.controlled.length > 0
+				? canvas.tokens.controlled
+				: VisionChannelsManager.getFallbackViewerTokenDocs()
+					.map(doc => canvas.tokens.get(doc.id))
+					.filter(Boolean);
+
+		return vTokens.map(vToken => VisionChannelsManager.VisionPoint(vToken));
 	}
 	
 	static CanVCSeeObject(pViewer, pObject) {
@@ -143,6 +156,27 @@ class VisionChannelsManager {
 			}
 		}
 	}
+
+	static getEffectiveViewerTokens() {
+		// Returns Token placeables used as vision sources
+		const controlled = canvas.tokens?.controlled ?? [];
+		if (controlled.length > 0) return controlled;
+
+		// Only fallback for non-GM and if setting enabled
+		if (game.user.isGM) return [];
+		if (!game.settings.get(cModuleName, "VCFallbackToAssignedToken")) return [];
+
+		const char = game.user.character;
+		if (!char) return [];
+
+		const token = canvas.tokens.placeables.find(t => t.actor?.id === char.id && t.isOwner);
+		return token ? [token] : [];
+	}
+
+	static getEffectiveViewerTokenDocs() {
+		// Returns TokenDocument[] used for VC receiver computations
+		return VisionChannelsManager.getEffectiveViewerTokens().map(t => t.document);
+	}
 }
 
 //Hooks
@@ -157,7 +191,7 @@ Hooks.once("ready", function() {
 		vDCVisionFunctions.unshift(function(pObject) {
 			if (vLocalVisionData.vCompleteVision) {return undefined};
 			
-			let vInfos = {	SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
+			let vInfos = {	SourcePoints : VisionChannelsManager.CurrentSourcePoints(),
 							TargetPoint : pObject.center,
 							InVision : VisionUtils.WalltestVisibility(pObject.wall),
 							RangeList : vLocalVisionData.vRangeList,
@@ -248,7 +282,7 @@ Hooks.once("ready", function() {
 					break;
 			}
 			
-			let vInfos = {	SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
+			let vInfos = {	SourcePoints : VisionChannelsManager.CurrentSourcePoints(),
 							TargetPoint : pWall.center,
 							WallCheck : true,
 							RangeList : vLocalVisionData.vRangeList,
